@@ -53,14 +53,15 @@ class HeaderBarUI(Gtk.Window):
         self.dataGrid.attach(self.hastabox, 1, 2, 1, 1)
 
         radiogrid = Gtk.Grid()
-        radio1 = Gtk.RadioButton.new_with_label(None, "Radio 1")
-        radiogrid.attach(radio1, 0, 1, 1, 1)
-        radio2 = Gtk.RadioButton.new_with_label_from_widget(radio1, "Radio 2")
-        radiogrid.attach(radio2, 0, 2, 1, 1)
-        radio3 = Gtk.RadioButton.new_with_label_from_widget(radio1, "Radio 3")
-        radiogrid.attach(radio3, 0, 3, 1, 1)
-        radio4 = Gtk.RadioButton.new_with_label_from_widget(radio1, "Radio 4")
-        radiogrid.attach(radio4, 0, 4, 1, 1)
+        self.radio1 = Gtk.RadioButton.new_with_label(None, "Radio 1")
+
+        radiogrid.attach(self.radio1, 0, 1, 1, 1)
+        self.radio2 = Gtk.RadioButton.new_with_label_from_widget(self.radio1, "Radio 2")
+        radiogrid.attach(self.radio2, 0, 2, 1, 1)
+        self.radio3 = Gtk.RadioButton.new_with_label_from_widget(self.radio1, "Radio 3")
+        radiogrid.attach(self.radio3, 0, 3, 1, 1)
+        self.radio4 = Gtk.RadioButton.new_with_label_from_widget(self.radio1, "Radio 4")
+        radiogrid.attach(self.radio4, 0, 4, 1, 1)
 
         radiosframe = Gtk.Frame()
         radiosframe.set_label("Opciones")
@@ -103,18 +104,31 @@ class HeaderBarUI(Gtk.Window):
             model = combo.get_model()
             desde = model[tree_iter][0]
             print("Desde %s" % desde)
+
     def on_hasta_combo_changed(self, combo):
-            print("Desde %s" % self.get_combo_text(combo))
+        print("Desde %s" % self.get_combo_text(combo))
+
     def get_combo_text(self, combo):
         tree_iter = combo.get_active_iter()
         if tree_iter is not None:
             model = combo.get_model()
             return model[tree_iter][0]
-    def on_comprar(self, btn):
-        new_line = self.get_combo_text(self.desdebox) +" "+ self.get_combo_text(self.hastabox)
-        buf = self.txtarea.get_buffer()
-        buf.set_text(new_line)
 
+    def on_comprar(self, btn):
+        radioTxt = self.resolve_radio(self.radio1)
+        new_line = self.data_field.get_text() + " " + self.get_combo_text(self.desdebox) + " " + self.get_combo_text(
+            self.hastabox) + " " + radioTxt.get_label()
+        buf = self.txtarea.get_buffer()
+        end_iter = buf.get_end_iter()
+        buf.insert(end_iter, new_line + "\n")
+
+    def resolve_radio(self, master_radio):
+        active = next((
+            radio for radio in
+            master_radio.get_group()
+            if radio.get_active()
+        ))
+        return active
 
 
 head = HeaderBarUI()
