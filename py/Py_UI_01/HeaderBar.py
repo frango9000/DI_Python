@@ -76,12 +76,24 @@ class HeaderBarUI(Gtk.Window):
         self.txtarea.set_margin_bottom(5)
         self.txtarea.set_size_request(-1, 100)
 
-        frame = Gtk.Frame()
-        frame.set_label("Disponibles")
+        checkframe = Gtk.Frame()
+        checkframe.set_label("Preferencia de Asiento")
+        checkhbox = Gtk.HBox()
+        checkframe.add(checkhbox)
+        self.check1 = Gtk.CheckButton("Ventana")
+        self.check2 = Gtk.CheckButton("Pasillo")
+        self.check3 = Gtk.CheckButton("Centro")
+        checkhbox.add(self.check1)
+        checkhbox.add(self.check2)
+        checkhbox.add(self.check3)
+        self.vbox1.add(checkframe)
 
-        frame.add(self.txtarea)
+        textframe = Gtk.Frame()
+        textframe.set_label("Disponibles")
 
-        self.vbox1.add(frame)
+        textframe.add(self.txtarea)
+
+        self.vbox1.add(textframe)
 
         buttons = Gtk.HBox()
         self.buscar = Gtk.Button("Buscar")
@@ -117,7 +129,7 @@ class HeaderBarUI(Gtk.Window):
     def on_comprar(self, btn):
         radioTxt = self.resolve_radio(self.radio1)
         new_line = self.data_field.get_text() + " " + self.get_combo_text(self.desdebox) + " " + self.get_combo_text(
-            self.hastabox) + " " + radioTxt.get_label()
+            self.hastabox) + " " + radioTxt.get_label() + " Pref: " + "".join(self.get_preferencias())
         buf = self.txtarea.get_buffer()
         end_iter = buf.get_end_iter()
         buf.insert(end_iter, new_line + "\n")
@@ -130,5 +142,21 @@ class HeaderBarUI(Gtk.Window):
         ))
         return active
 
+    def get_preferencias(self):
+        str = ""
+        num = 0
+        if self.check1.get_active():
+            num += 1
+            str += (" " + self.check1.get_label())
+        if self.check2.get_active():
+            num += 1
+            str += (" " + self.check2.get_label())
+        if self.check3.get_active():
+            num += 1
+            str += (" " + self.check3.get_label())
+        if num == 0 or num == 3:
+            return "N/A"
+        else:
+            return str
 
 head = HeaderBarUI()
