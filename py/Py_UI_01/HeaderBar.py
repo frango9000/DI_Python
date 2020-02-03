@@ -135,6 +135,13 @@ class HeaderBarUI(Gtk.Window):
         buf.insert(end_iter, new_line + "\n")
 
     def resolve_radio(self, master_radio):
+        """ Documentacion corta e informativa del metodo
+
+        Descripcion detallada
+
+        :param master_radio:
+        :return:
+        """
         active = next((
             radio for radio in
             master_radio.get_group()
